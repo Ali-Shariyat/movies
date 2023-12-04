@@ -1,12 +1,13 @@
 import axios from 'axios'
 import { apiConfig } from '@/config/api.ts'
 import { Route } from '@/ts/interfaces/routes-face.ts'
-import { reactive, Ref, ref, toRefs } from 'vue'
+import { Ref, ref } from 'vue'
 
 interface StateFace<T> {
     data: T,
     loading: boolean,
 }
+
 
 export const FetchApi = function <T = unknown>(ApiName: 'first' | 'second', router: Route, params = null, body = null): {
     fetchFn: () => Promise<Ref<StateFace<T>>>;
@@ -20,8 +21,13 @@ export const FetchApi = function <T = unknown>(ApiName: 'first' | 'second', rout
     const fetchFn = ()=>{
         state.value.loading = true
         return axios({
+            proxy: {
+                host: 'http://localhost:5173',
+                port: 80,
+                auth: {username: 'my-user', password: 'my-password'}
+            },
+            url:prefix + router.route,
             method: router.method,
-            url: prefix + router.route,
             params:params.value,
             data: body,
         }).then(async (response) => {
