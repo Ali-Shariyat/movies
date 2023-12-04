@@ -15,10 +15,10 @@ export default defineConfig({
   server: {
     port: 5500,
     proxy: {
-      '/api/': {
+      '/api/v1': {
         target: 'https://moviesapi.ir',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/api^\/v1/, '')
       },
     }
   }
