@@ -1,0 +1,13 @@
+.movies{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  .movie-image{
+    height: 150px;
+  }
+  .pagination{
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+  }
+}
