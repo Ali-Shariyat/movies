@@ -1,25 +1,40 @@
 import { defineConfig } from 'vite'
-import * as path from 'path'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 import vue from '@vitejs/plugin-vue'
-import { apiConfig } from './src/config/api'
+import path from 'path'
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [vue()],
+const defaultConfig = {
+  plugins: [vue(),
+    basicSsl()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
+}
+export default defineConfig(({ command, mode }) => {
+  if (command === 'serve') {
+    const isDev = mode === 'development'
 
-  server: {
-    port: 5500,
-    proxy: {
-      '/api/': {
-        target: 'https://moviesapi.ir',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+    return {
+      ...defaultConfig,
+      server: {
+        port:5000,
+        proxy: {
+          '/api/v1/': {
+            target: isDev ? 'https://moviesapi.ir': 'https://moviesapi.ir',
+            changeOrigin: isDev,
+            secure: !isDev,
+          },
+          '/omdbapi': {
+            target: isDev ? 'https://www.omdbapi.com': 'https://www.omdbapi.com',
+            changeOrigin: isDev,
+            secure: !isDev,
+          },
+        },
       },
     }
+  } else {
+    return defaultConfig
   }
-})
+});

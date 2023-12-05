@@ -1,4 +1,3 @@
-NODE_ENV = 'development'
 VITE_API=https://moviesapi.ir
 VITE_API_SECOND=https://api.apieco.ir
 VITE_API_PREFIX=/api/v1

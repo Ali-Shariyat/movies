@@ -17,19 +17,13 @@ export const FetchApi = function <T = unknown>(ApiName: 'first' | 'second', rout
         data: null,
         loading: false,
     })
-    const prefix = ApiName === 'first' ? apiConfig.api : apiConfig.apiSecond
     const fetchFn = ()=>{
         state.value.loading = true
         return axios({
-            proxy: {
-                host: 'http://localhost:5173',
-                port: 80,
-                auth: {username: 'my-user', password: 'my-password'}
-            },
-            url:prefix + router.route,
-            method: router.method,
+            baseURL:`/api/v1/`+router.route,
+            method:router.method,
             params:params.value,
-            data: body,
+            data:body
         }).then(async (response) => {
             state.value.data = response.data
             state.value.loading = false
