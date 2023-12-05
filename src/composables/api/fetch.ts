@@ -22,8 +22,7 @@ export const FetchApi = function <T = unknown>(ApiName: 'first' | 'second', rout
     const fetchFn = ()=>{
         state.value.loading = true
         return axios.create({
-            baseURL:baseURL+'/api/v1',
-            method: router.method,
+            baseURL:'https://moviesapi.ir/api/v1',
             params:params.value,
             data: body,
         }).get(router.route).then(async (response) => {

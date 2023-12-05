@@ -13,12 +13,11 @@ export default defineConfig(({ command, mode }) => {
       },
     },
     server: {
-      // ... other server configurations
       proxy: {
-        '/api/v1': {
-          target: prod ? process.env.VITE_API : '',
+        '/api': {
+          target: 'https://moviesapi.ir/api/v1',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api^\/v1/, ''),
+          rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
     },
