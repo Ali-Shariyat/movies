@@ -10,6 +10,13 @@ export const isDevelopment = () => process.env.NODE_ENV === 'development'
 const PROFINANCE_API = 'https://moviesapi.ir'
 const ACADEMYLAND_API = 'https://acm.academyland.net/api/web/'
 
+
+const SELECTED_API = MEDICINE_CITY_2_API
+
+// export const BASE_URL = isProduction() ? PROFINANCE_API : ' http://localhost:3000' + '/api/v1'
+export const BASE_URL = SELECTED_API
+
+
 export const PROXY_CONFIG = isProduction()
     ? {
       '/api/v1': {
