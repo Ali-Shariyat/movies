@@ -17,6 +17,7 @@ export default defineConfig(({ command, mode }) => {
         '/api/v1': {
           target: 'https://moviesapi.ir/api/v1',
           changeOrigin: true,
+          secure: false,
           rewrite: (path) => path.replace('/api/v1', ''),
         },
       },
