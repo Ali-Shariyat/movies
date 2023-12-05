@@ -4,13 +4,24 @@ import vue from '@vitejs/plugin-vue'
 import { apiConfig } from './src/config/api'
 
 // https://vitejs.dev/config/
-
+export const isProduction = () => process.env.NODE_ENV === 'production'
+export const isDevelopment = () => process.env.NODE_ENV === 'development'
 // Load environment variables
-const { VITE_API, VITE_API_SECOND, VITE_API_PREFIX, VITE_API_SECOND_PREFIX } = process.env;
+const PROFINANCE_API = 'https://moviesapi.ir'
+const ACADEMYLAND_API = 'https://acm.academyland.net/api/web/'
 
-// Determine the API target based on the environment
-const apiTarget = process.env.NODE_ENV === 'production' ? VITE_API : VITE_API_SECOND;
-const apiPrefix = process.env.NODE_ENV === 'production' ? VITE_API_PREFIX : VITE_API_SECOND_PREFIX;
+export const PROXY_CONFIG = isProduction()
+    ? {
+      '/api/v1': {
+        target: SELECTED_API,
+        changeOrigin: true,
+        rewrite: { '^/api/v1': '' },
+        secure: false,
+        ws: true
+      }
+    }
+    : {}
+
 export default defineConfig({
   plugins: [vue()],
   resolve: {
@@ -20,12 +31,6 @@ export default defineConfig({
   },
   server: {
     port: 5500,
-    proxy: {
-      [apiPrefix]: {
-        target: apiTarget,
-        changeOrigin: true,
-        rewrite: (path) => path.replace(new RegExp(`^${apiPrefix}`), ''),
-      },
-    },
+    proxy: PROXY_CONFIG,
   },
 })
