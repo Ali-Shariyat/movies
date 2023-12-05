@@ -15,8 +15,10 @@ export default defineConfig(({ command, mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: 'https://moviesapi.ir/api/v1',
+          target: 'https://moviesapi.ir/api',
           changeOrigin: true,
+          secure:true,
+          ws:true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
