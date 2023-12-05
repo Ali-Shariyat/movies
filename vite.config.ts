@@ -4,6 +4,13 @@ import vue from '@vitejs/plugin-vue'
 import { apiConfig } from './src/config/api'
 
 // https://vitejs.dev/config/
+
+// Load environment variables
+const { VITE_API, VITE_API_SECOND, VITE_API_PREFIX, VITE_API_SECOND_PREFIX } = process.env;
+
+// Determine the API target based on the environment
+const apiTarget = process.env.NODE_ENV === 'production' ? VITE_API : VITE_API_SECOND;
+const apiPrefix = process.env.NODE_ENV === 'production' ? VITE_API_PREFIX : VITE_API_SECOND_PREFIX;
 export default defineConfig({
   plugins: [vue()],
   resolve: {
@@ -11,15 +18,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-
   server: {
     port: 5500,
     proxy: {
-      '/api/v1': {
-        target: 'https://moviesapi.ir',
+      [apiPrefix]: {
+        target: apiTarget,
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api^\/v1/, '')
+        rewrite: (path) => path.replace(new RegExp(`^${apiPrefix}`), ''),
       },
-    }
-  }
+    },
+  },
 })
