@@ -15,11 +15,14 @@ export default defineConfig(({ command, mode }) => {
     server: {
       proxy: {
         '/api/v1': {
-          target: 'https://moviesapi.ir/api/v1',
+          target: 'https://moviesapi.ir',
           changeOrigin: true,
-          secure:false,
-          ws:true,
-          rewrite: (path) => path.replace(/^\/api^\/v1/, '/pop'),
+          secure: false,
+          ws: true,
+          rewrite: (path) => {
+            console.log('pathpathpathpathpathpathpath', path)
+            return path.replace(/^\/api\/v1/, '/api/v1')
+          },
         },
       },
     },
