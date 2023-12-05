@@ -17,11 +17,14 @@ export const FetchApi = function <T = unknown>(ApiName: 'first' | 'second', rout
         data: null,
         loading: false,
     })
-    const prefix = ApiName === 'first' ? apiConfig.api : apiConfig.apiSecond
-    const baseURL = import.meta.env.VITE_API;
     const fetchFn = ()=>{
         state.value.loading = true
-        return axios.get('/api/v1'+router.route).then(async (response) => {
+        return axios({
+            baseURL:`/api/v1/`+router.route,
+            method:router.method,
+            params:params.value,
+            data:body
+        }).then(async (response) => {
             state.value.data = response.data
             state.value.loading = false
             return state

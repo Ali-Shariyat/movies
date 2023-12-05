@@ -1,26 +1,40 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite'
+import basicSsl from '@vitejs/plugin-basic-ssl'
+import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
-export default defineConfig(({ command, mode }) => {
-  const prod = mode === 'production';
-
-  return {
-    plugins: [vue()],
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './src'),
-      },
+const defaultConfig = {
+  plugins: [vue(),
+    basicSsl()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
     },
-    server: {
-      proxy: {
-        '/api/v1/': {
-          target: 'https://moviesapi.ir/api/v1',
-          changeOrigin: true,
-          secure: false,
-          rewrite: (path) => path.replace('/api/v1', ''),
+  },
+}
+export default defineConfig(({ command, mode }) => {
+  if (command === 'serve') {
+    const isDev = mode === 'development'
+
+    return {
+      ...defaultConfig,
+      server: {
+        port:5000,
+        proxy: {
+          '/api/v1/': {
+            target: isDev ? 'https://moviesapi.ir': 'https://moviesapi.ir',
+            changeOrigin: isDev,
+            secure: !isDev,
+          },
+          '/omdbapi': {
+            target: isDev ? 'https://www.omdbapi.com': 'https://www.omdbapi.com',
+            changeOrigin: isDev,
+            secure: !isDev,
+          },
         },
       },
-    },
-  };
+    }
+  } else {
+    return defaultConfig
+  }
 });

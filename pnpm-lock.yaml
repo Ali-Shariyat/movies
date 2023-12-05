@@ -31,9 +31,15 @@ devDependencies:
   '@types/node':
     specifier: ^20.10.3
     version: 20.10.3
+  '@vitejs/plugin-basic-ssl':
+    specifier: ^1.0.2
+    version: 1.0.2(vite@5.0.5)
   '@vitejs/plugin-vue':
     specifier: ^4.5.0
     version: 4.5.1(vite@5.0.5)(vue@3.3.9)
+  https:
+    specifier: ^1.0.0
+    version: 1.0.0
   typescript:
     specifier: ^5.2.2
     version: 5.3.2
@@ -447,6 +453,15 @@ packages:
     resolution: {integrity: sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==}
     dev: false
 
+  /@vitejs/plugin-basic-ssl@1.0.2(vite@5.0.5):
+    resolution: {integrity: sha512-DKHKVtpI+eA5fvObVgQ3QtTGU70CcCnedalzqmGSR050AzKZMdUzgC8KmlOneHWH8dF2hJ3wkC9+8FDVAaDRCw==}
+    engines: {node: '>=14.6.0'}
+    peerDependencies:
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0
+    dependencies:
+      vite: 5.0.5(@types/node@20.10.3)(sass@1.69.5)
+    dev: true
+
   /@vitejs/plugin-vue@4.5.1(vite@5.0.5)(vue@3.3.9):
     resolution: {integrity: sha512-DaUzYFr+2UGDG7VSSdShKa9sIWYBa1LL8KC0MNOf2H5LjcTPjob0x8LbkqXWmAtbANJCkpiQTj66UVcQkN2s3g==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -788,6 +803,10 @@ packages:
   /he@1.2.0:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
+    dev: true
+
+  /https@1.0.0:
+    resolution: {integrity: sha512-4EC57ddXrkaF0x83Oj8sM6SLQHAWXw90Skqu2M4AEWENZ3F02dFJE/GARA8igO79tcgYqGrD7ae4f5L3um2lgg==}
     dev: true
 
   /immutable@4.3.4:
