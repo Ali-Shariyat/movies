@@ -17,10 +17,11 @@ export const FetchApi = function <T = unknown>(ApiName: 'first' | 'second', rout
         data: null,
         loading: false,
     })
+    const Api = ApiName === "first" ? '/api/v1/' : "/omdbapi/"
     const fetchFn = ()=>{
         state.value.loading = true
         return axios({
-            baseURL:`/api/v1/`+router.route,
+            baseURL:Api+router.route,
             method:router.method,
             params:params.value,
             data:body

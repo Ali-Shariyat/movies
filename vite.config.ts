@@ -13,28 +13,31 @@ const defaultConfig = {
   },
 }
 export default defineConfig(({ command, mode }) => {
-  if (command === 'serve') {
+  // if (command === 'serve') {
     const isDev = mode === 'development'
 
     return {
       ...defaultConfig,
       server: {
-        port:5000,
+        port:8880,
         proxy: {
           '/api/v1/': {
             target: isDev ? 'https://moviesapi.ir': 'https://moviesapi.ir',
-            changeOrigin: isDev,
-            secure: !isDev,
+            changeOrigin: true,
+            secure: false,
+            ws:false,
           },
-          '/omdbapi': {
+          '/omdbapi/': {
             target: isDev ? 'https://www.omdbapi.com': 'https://www.omdbapi.com',
-            changeOrigin: isDev,
-            secure: !isDev,
+            changeOrigin: true,
+            secure: false,
+            ws:false,
+            rewrite: (path) => path.replace(/^\/omdbapi/, '')
           },
         },
       },
     }
-  } else {
-    return defaultConfig
-  }
+  // } else {
+  //   return defaultConfig
+  // }
 });
