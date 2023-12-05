@@ -18,15 +18,10 @@ export const FetchApi = function <T = unknown>(ApiName: 'first' | 'second', rout
         loading: false,
     })
     const prefix = ApiName === 'first' ? apiConfig.api : apiConfig.apiSecond
-    // const baseURL = import.meta.env.VITE_API;
-    const baseURL = 'https://moviesapi.ir/api/v1';
+    const baseURL = import.meta.env.VITE_API;
     const fetchFn = ()=>{
         state.value.loading = true
-        return axios.create({
-            baseURL,
-            params:params.value,
-            data: body,
-        }).get(router.route).then(async (response) => {
+        return axios.get('/api'+router.route).then(async (response) => {
             state.value.data = response.data
             state.value.loading = false
             return state
