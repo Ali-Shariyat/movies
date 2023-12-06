@@ -1,5 +1,5 @@
 ###### Movies List Project
-
+## [Shariyat](www.shariyat.ir)
 # install packages with `pnpm install`
 
 developer start with : `pnpm dev`
@@ -17,6 +17,6 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
 1. project use between technologies
    1. `Vite`
    2. `TypeScript`
-   3. [Element Plus](https://code.visualstudio.com/)
+   3. [Element Plus](https://element-plus.org/)
    4. `Extensions: Show Built-in Extensions`
 
