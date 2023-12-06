@@ -1,10 +1,12 @@
+import { TypeEnum } from '@/ts/enums/pages/movies.ts'
+
 export interface MoviesFace {
     data:     Datum[];
     metadata: Metadata;
 }
 
 export interface Datum {
-    id:          number;
+    id:          number | null;
     title:       string;
     poster:      string;
     year:        string;
@@ -19,4 +21,20 @@ export interface Metadata {
     per_page:     number;
     page_count:   number;
     total_count:  number;
+}
+
+
+
+export interface SecondMoviesFace {
+    search:       SearchFace[];
+    totalResults: string;
+    response:     string;
+}
+
+export interface SearchFace {
+    Title:  string;
+    Year:   string;
+    imdbID: string;
+    Type:   TypeEnum;
+    Poster: string;
 }

@@ -2,66 +2,35 @@
 import { FetchApi } from '@/composables/api/fetch.ts'
 import { RoutesApi } from '@/composables/api/routes.ts'
 import { computed, onMounted, Ref, ref, watch } from 'vue'
-import { Datum, MoviesFace } from '@/ts/interfaces/pages/movies.ts'
+import type { Datum, MoviesFace, SecondMoviesFace } from '@/ts/interfaces/pages/movies.ts'
 import { useRoute, useRouter } from 'vue-router'
+import { filterMovies } from '@/utils/filter-movies.ts'
+import { useMovie } from '@/store/movie.store.ts'
 
 const route = useRoute()
+const movieStore = useMovie()
 const { push } = useRouter()
-const search = ref()
+const search = ref(route.query.s)
 const params = computed(() => ({ page: route.query?.page, q: search.value }))
 const secondParams = computed(() => ({
     apikey: import.meta.env.VITE_API_KEY,
     plot: 'full',
+    p: 'full',
     Page: route.query?.page,
-    s: search.value ?? 'a',
+    s: search.value ?? '',
 }))
 
-const fetch = FetchApi<MoviesFace>('first', RoutesApi.movies, params)
-const secondFetch = FetchApi<any>('second', RoutesApi.secondMovies, secondParams)
+const fetch = FetchApi<MoviesFace>('first', RoutesApi.movies(), params)
+const secondFetch = FetchApi<SecondMoviesFace>('second', RoutesApi.secondMovies, secondParams)
 
 
-const rows: Ref<Datum[]> = ref()
+const rows: Ref<Datum[]> = ref([])
 const paging = ref({
     current: +route.query?.page,
     pages: 0,
     total: 0,
 })
 
-//TODO:filterMovies ==> merge api data
-const filterMovies = (firstMovies, secondMovies) => {
-    const firstList = firstMovies.map((item) => {
-        if (secondMovies?.length) {
-            if (!secondMovies.map((second) => second.Title).includes(item.title)) {
-                return item
-            }
-        } else {
-            return item
-        }
-    }).filter((item) => !!item)
-    const secondList = secondMovies?.map((item, index) => {
-        if (firstMovies.length) {
-            if (!firstMovies.map((second) => second.title).includes(item.Title)) {
-                return ({
-                    title: item.Title,
-                    poster: item.Poster,
-                })
-            }
-        } else {
-            return ({
-                title: item.Title,
-                poster: item.Poster,
-            })
-        }
-    }).filter((item) => !!item)
-    let movies = []
-    if (secondList) {
-        movies = [...movies, ...secondList]
-    }
-    if (firstList) {
-        movies = [...movies, ...firstList]
-    }
-    return movies
-}
 
 //TODO:when fetch data change set row data
 watch(() => [fetch.state.value.loading, secondFetch.state.value.loading], async ([newA, newB], [prevA, prevB]) => {
@@ -70,30 +39,29 @@ watch(() => [fetch.state.value.loading, secondFetch.state.value.loading], async 
     if (!newA && !newB) {
         const firstMovies = fetch.state.value.data?.data ?? []
         const secondMovies = secondFetch.state.value.data?.Search ?? []
-        const total = (+fetch.state.value.data.metadata.total_count + +(secondFetch.state.value.data.totalResults??0))
+        const total = (+fetch.state.value.data.metadata.total_count + +(secondFetch.state.value.data.totalResults ?? 0))
         rows.value = filterMovies(firstMovies, secondMovies)
-        console.log(Math.round(total / 10),total)
         paging.value.pages = Math.round(total / 10)
         paging.value.total = total
     }
 
 })
-const handleCurrentChange = async (e) => {
-    await push({ name: 'home', query: { page: e } })
+
+//TODO:table events
+const handleCurrentChange = async (currenctPage:number) => {
+    await push({ name: 'home', query: { page: currenctPage } })
     await fetch.fetchFn()
     await secondFetch.fetchFn()
 }
 const searchMovies = async () => {
+    push({name:'home',query:{...route.query,s:search.value}})
     await fetch.fetchFn()
     await secondFetch.fetchFn()
 }
-const filterTableData = computed(() =>
-    rows.value?.filter(
-        (data) =>
-            !search.value ||
-            data.title.toLowerCase().includes(search.value.toLowerCase()),
-    ),
-)
+const rowEvent = (event) => {
+    movieStore.state.data = {}
+    push({name:'movie',params:{id:event.id},query:{api:event.api,s:search.value}})
+}
 
 //lifecycle
 onMounted(() => {
@@ -104,14 +72,16 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class='movies m-3' dir='rtl'>
-        <el-skeleton v-if='fetch.state.value.loading' :rows='20' animated />
+    <div class='movies'>
+        <el-skeleton v-if='fetch.state.value.loading && rows.length === 0' :rows='20' animated />
         <template v-else>
-            <div class='search-box'>
-                <el-input v-model='search' placeholder='جستجو فیلم' size='small' />
-                <el-button plain type='primary' @click='searchMovies'>جستجو</el-button>
-            </div>
-            <el-table :data='rows'>
+            <el-form @submit.prevent='searchMovies' :model="search" class='search-box'>
+                <el-form-item class='search-input'>
+                    <el-input v-model='search' placeholder='search...' size='small' />
+                </el-form-item>
+                <el-button plain type='primary' @click='searchMovies'>search</el-button>
+            </el-form>
+            <el-table @row-click='rowEvent' :data='rows'>
                 <el-table-column label='فیلم' prop='title' width='180'></el-table-column>
                 <el-table-column label='' prop='poster' width='180'>
                     <template #default='scope'>
@@ -127,7 +97,6 @@ onMounted(() => {
                 <el-table-column align='right'>
                 </el-table-column>
             </el-table>
-            {{paging.total}}
             <el-pagination
                 v-model:current-page='paging.current'
                 :background='true'

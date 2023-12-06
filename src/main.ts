@@ -4,13 +4,13 @@ import 'element-plus/dist/index.css'
 import './style.scss'
 import ElementPlus from 'element-plus'
 import router from './router'
-import { VueQueryPlugin } from '@tanstack/vue-query'
 import App from './App.vue'
+import { useMovie } from './store/movie.store.ts';
 
 
 const app = createApp(App)
-app.use(VueQueryPlugin)
 app.use(router)
+app.use(useMovie)
 app.use(ElementPlus, {
     locale: fa,
 })

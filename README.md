@@ -1,6 +1,6 @@
-# Vue 3 + TypeScript + Vite
+# install packages with `pnpm install`
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+developer start with : `pnpm dev`
 
 ## Recommended IDE Setup
 
@@ -12,7 +12,9 @@ TypeScript cannot handle type information for `.vue` imports by default, so we r
 
 If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+1. project use between technologies
+   1. `Vite`
+   2. `TypeScript`
+   3. [Element Plus](https://code.visualstudio.com/)
+   4. `Extensions: Show Built-in Extensions`
+

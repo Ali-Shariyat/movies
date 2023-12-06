@@ -1,5 +1,5 @@
 export interface RoutesFace{
-    [key: string]: Route;
+    [key: string]: Route|Function;
 }
 
 export interface Route{
