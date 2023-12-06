@@ -9,7 +9,7 @@ interface StateFace<T> {
 }
 
 
-export const FetchApi = function <T = unknown>(ApiName: 'first' | 'second', router: Route, params = null, body = null): {
+export const FetchApi = function <T = unknown>(ApiName: 'first' | 'second', router: Route, params = null, body = null,autoFetch:boolean=true): {
     fetchFn: () => Promise<Ref<StateFace<T>>>;
     state: Ref<StateFace<T>>
 } {
@@ -17,12 +17,13 @@ export const FetchApi = function <T = unknown>(ApiName: 'first' | 'second', rout
         data: null,
         loading: false,
     })
+    const Api = ApiName === "first" ? '/api/v1/' : "/omdbapi/"
     const fetchFn = ()=>{
         state.value.loading = true
         return axios({
-            baseURL:`/api/v1/`+router.route,
+            baseURL:Api+router.route,
             method:router.method,
-            params:params.value,
+            params:params?.value ?? params,
             data:body
         }).then(async (response) => {
             state.value.data = response.data
@@ -30,7 +31,9 @@ export const FetchApi = function <T = unknown>(ApiName: 'first' | 'second', rout
             return state
         })
     }
-    fetchFn()
+    if (autoFetch) {
+        fetchFn()
+    }
     return {state, fetchFn:fetchFn }
 
 }

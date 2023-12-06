@@ -2,6 +2,8 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
+  padding: 20px;
+  border: 1px dashed #1d8f8c;
   .movie-image{
     height: 150px;
   }
@@ -9,5 +11,13 @@
     padding: 10px;
     display: flex;
     justify-content: center;
+  }
+  .search-box{
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    .search-input{
+      width: 100%;
+    }
   }
 }

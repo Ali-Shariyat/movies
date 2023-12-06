@@ -1,0 +1,37 @@
+.movie{
+  width: 80vw;
+  height: 100vh;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .movie-box{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 10px 0 rgba(9, 177, 192, 0.53);
+    padding: 20px;
+    gap:40px;
+    width:100%;
+    border-radius: 30px;
+    .poster{
+      flex-shrink: 0;
+      width: 400px;
+      height: 600px;
+    }
+    .movie-context{
+      display: flex;
+      flex-direction: column;
+      gap:10px;
+      width: 100%;
+      .movie-detail{
+        .title{
+          font-size: 26px;
+        }
+        .text{
+          font-size: 18px;
+        }
+      }
+    }
+  }
+}

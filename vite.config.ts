@@ -1,40 +1,44 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
 const defaultConfig = {
-  plugins: [vue(),
-    basicSsl()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
+    plugins: [vue(), basicSsl()],
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, './src'),
+        },
     },
-  },
 }
+
+
 export default defineConfig(({ command, mode }) => {
-  if (command === 'serve') {
-    const isDev = mode === 'development'
+    process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
 
     return {
-      ...defaultConfig,
-      server: {
-        port:5000,
-        proxy: {
-          '/api/v1/': {
-            target: isDev ? 'https://moviesapi.ir': 'https://moviesapi.ir',
-            changeOrigin: isDev,
-            secure: !isDev,
-          },
-          '/omdbapi': {
-            target: isDev ? 'https://www.omdbapi.com': 'https://www.omdbapi.com',
-            changeOrigin: isDev,
-            secure: !isDev,
-          },
+        ...defaultConfig,
+        server: {
+            port: 80,
+            strictPort: true,
+            hmr: {
+                clientPort: 80,
+            },
+            proxy: {
+                '/api/v1/': {
+                    target: process.env.VITE_API_MOVIES,
+                    changeOrigin: true,
+                    secure: false,
+                    ws: false,
+                },
+                '/omdbapi/': {
+                    target: process.env.VITE_API_OMDBAPI,
+                    changeOrigin: true,
+                    secure: false,
+                    ws: false,
+                    rewrite: (path) => path.replace(/^\/omdbapi/, ''),
+                },
+            },
         },
-      },
     }
-  } else {
-    return defaultConfig
-  }
-});
+})
